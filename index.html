@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contoh Kode Program</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+    }
+    #console {
+      width: 100%;
+      height: 200px;
+      background-color: black;
+      color: white;
+      font-size: 12px;
+      overflow: scroll;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="console"></div>
+  <script>
+    function startScript() {
+      const { spawn } = require('child_process');
+      const ls = spawn('nohup', ['zeeone.js']);
+
+      ls.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        document.getElementById("console").innerHTML += `<p>${data}</p>`;
+      });
+
+      ls.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        document.getElementById("console").innerHTML += `<p>${data}</p>`;
+      });
+
+      ls.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+        document.getElementById("console").innerHTML += `<p>child process exited with code ${code}</p>`;
+        startScript();
+      });
+    }
+
+    startScript();
+  </script>
+</body>
+</html>
